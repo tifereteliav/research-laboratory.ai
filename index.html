@@ -72,7 +72,6 @@
             75% { transform: translateX(-5px); }
         }
 
-        /* סרגל התקדמות מותאם */
         .step-indicator {
             width: 2rem;
             height: 2rem;
@@ -134,22 +133,21 @@
             
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 relative">
-                    <!-- Progress Steps -->
                     <div id="step-1-indicator" class="step-indicator step-active">1</div>
                     <div class="w-8 h-1 bg-slate-700 rounded-full"></div>
                     <div id="step-2-indicator" class="step-indicator step-pending">2</div>
                 </div>
                 <div class="h-8 w-px bg-slate-700 mx-2"></div>
                 <div class="text-right">
-                    <p class="text-sm text-slate-400">ניקוד מומחיות</p>
-                    <p class="font-bold text-xl text-teal-400" id="score-display">0</p>
+                    <p class="text-sm text-slate-400">הצלחה בינתיים</p>
+                    <p class="font-bold text-xl text-teal-400"><span id="score-display">0</span>%</p>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- אזור התרחיש (שמאל/למעלה) -->
+            <!-- אזור התרחיש -->
             <div class="lg:col-span-5 glass-panel rounded-2xl p-6 relative overflow-hidden flex flex-col">
                 <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
                 <div class="flex items-center gap-2 mb-4 text-blue-400">
@@ -167,7 +165,7 @@
                 </div>
             </div>
 
-            <!-- אזור הכלים / פעולות (ימין/למטה) -->
+            <!-- אזור הכלים / פעולות -->
             <div class="lg:col-span-7 glass-panel rounded-2xl p-6 min-h-[400px] flex flex-col">
                 
                 <!-- שלב 1: בחירת כלי -->
@@ -181,7 +179,7 @@
                     </div>
                 </div>
 
-                <!-- שלב 2: בחירת פעולה (מוסתר בהתחלה) -->
+                <!-- שלב 2: בחירת פעולה -->
                 <div id="step-2-actions" class="hidden-screen flex-grow flex flex-col slide-up">
                     <div class="flex items-center justify-between mb-6 border-b border-slate-700 pb-4">
                         <div class="flex items-center gap-3">
@@ -192,7 +190,7 @@
                             </div>
                         </div>
                         <button onclick="resetToStep1()" class="text-sm text-slate-400 hover:text-white flex items-center gap-1">
-                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> חזור
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> חזור לכלים
                         </button>
                     </div>
                     
@@ -235,14 +233,14 @@
     <!-- מסך סיום -->
     <div id="end-screen" class="glass-panel rounded-3xl p-10 max-w-2xl w-full text-center hidden-screen slide-up mt-10">
         <div class="inline-block p-6 bg-gradient-to-br from-teal-500/20 to-emerald-500/20 rounded-full mb-6 border border-teal-500/30">
-            <i data-lucide="check-badge" class="w-20 h-20 text-teal-400"></i>
+            <i data-lucide="award" class="w-20 h-20 text-teal-400"></i>
         </div>
-        <h2 class="text-4xl font-bold mb-4">הסימולציה הושלמה בהצלחה!</h2>
+        <h2 class="text-4xl font-bold mb-4">הסימולציה הושלמה!</h2>
         <p class="text-xl text-slate-300 mb-6">
-            צברת <span id="final-score" class="font-bold text-teal-400 text-3xl mx-2">0</span> נקודות מומחיות.
+            הציון הסופי שלך כחוקר קליני הוא: <span id="final-score" class="font-bold text-teal-400 text-5xl mx-2">0%</span>
         </p>
-        <p class="text-lg text-slate-400 mb-10 max-w-xl mx-auto leading-relaxed">
-            הוכחתם חשיבה ביקורתית בבחירת הכלים הנכונים והבנה עמוקה של מגבלות ה-AI. זכרו תמיד: הכלים הם ה"ידיים", אך אתם כצוות הקליני והמחקרי נשארים תמיד ה"מוח".
+        <p id="final-message" class="text-lg text-slate-400 mb-10 max-w-xl mx-auto leading-relaxed">
+            מסר סיום יופיע כאן...
         </p>
         <button onclick="location.reload()" class="px-8 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-full font-bold transition-colors flex items-center justify-center mx-auto gap-2">
             <i data-lucide="refresh-cw" class="w-5 h-5"></i>
@@ -253,25 +251,26 @@
     <script>
         lucide.createIcons();
 
-        // הגדרת הכלים הזמינים במשחק
+        // הגדרת כל הכלים הזמינים במשחק (כולל כלים גנריים למסיחים)
         const TOOLS = {
             openevidence: { name: "OpenEvidence", icon: "stethoscope", color: "text-rose-400", bg: "bg-rose-500/20" },
             consensus: { name: "Consensus", icon: "flask-conical", color: "text-purple-400", bg: "bg-purple-500/20" },
-            perplexity: { name: "Perplexity", icon: "globe", color: "text-blue-400", bg: "bg-blue-500/20" },
             gemini_gems: { name: "Gemini Gems", icon: "sparkles", color: "text-amber-400", bg: "bg-amber-500/20" },
             undermind: { name: "Undermind", icon: "layers", color: "text-indigo-400", bg: "bg-indigo-500/20" },
-            notebooklm: { name: "NotebookLM", icon: "book-open", color: "text-emerald-400", bg: "bg-emerald-500/20" }
+            notebooklm: { name: "NotebookLM", icon: "book-open", color: "text-emerald-400", bg: "bg-emerald-500/20" },
+            google: { name: "Google", icon: "search", color: "text-blue-300", bg: "bg-blue-500/20" },
+            copilot: { name: "Copilot", icon: "bot", color: "text-sky-300", bg: "bg-sky-500/20" }
         };
 
-        // התרחישים המעודכנים
+        // התרחישים המעודכנים (6 תרחישים בסך הכל)
         const cases = [
             {
                 id: 1,
                 scenario: "את מסיימת לחפש הנחיות קליניות לטיפול במחלת כליות עבור מטופל א', וכעת ניגשת למערכת כדי לחפש מידע על סוכרת עבור מטופל ב'.",
-                availableTools: ["undermind", "consensus", "openevidence"],
+                availableTools: ["google", "copilot", "openevidence"],
                 correctTool: "openevidence",
-                toolError: "שגיאה: לשאלות קליניות ישירות מבוססות הנחיות (Guidelines) עבור מטופלים, הכלי המדויק ביותר מתוך האפשרויות הוא OpenEvidence.",
-                actionQuestion: "בחרת ב-OpenEvidence. מהי הפעולה הקריטית שעליך לבצע כעת?",
+                toolError: "שגיאה! כלים גנריים כמו גוגל או Copilot אינם ייעודיים לרפואה ועלולים לספק מידע לא מאומת או לא מעודכן. לשאלות קליניות והנחיות (Guidelines) חייבים להשתמש ב-OpenEvidence.",
+                actionQuestion: "בחרת ב-OpenEvidence. מהי הפעולה הקריטית שעליך לבצע כעת לפני חיפוש על המטופל החדש?",
                 actions: [
                     { text: "לשנות את הפוקוס (Focus) לחיפוש Academic בלבד", correct: false },
                     { text: "ללחוץ על 'New Conversation' כדי ליצור בידוד הקשר", correct: true },
@@ -285,21 +284,21 @@
                 availableTools: ["notebooklm", "consensus", "gemini_gems"],
                 correctTool: "consensus",
                 toolError: "שגיאה: מבין הכלים המוצגים, לסקירת מחקרים אקדמיים, מציאת קונצנזוס מדעי והשוואת ראיות בספרות, הכלי הייעודי הוא Consensus.",
-                actionQuestion: "נכנסת ל-Consensus. באיזה מסנן (Filter) חובה להשתמש כדי למנוע טעויות קליניות חמורות?",
+                actionQuestion: "נכנסת ל-Consensus. באיזה סינון (Filter) כדאי להשתמש כדי למנוע טעויות בהסקת המסקנות?",
                 actions: [
-                    { text: "Open Access - כדי שנוכל לקרוא את הטקסט המלא", correct: false },
-                    { text: "Exclude Preprints - כדי להימנע ממאמרים ישנים", correct: false },
-                    { text: "Human Studies (תחת Methodology) - כדי להימנע ממחקרים על חיות", correct: true }
+                    { text: "סינון לכתבי עת מדרג Q3-Q4 בלבד", correct: false },
+                    { text: "סינון למחקרים שפורסמו בתקופת הזמן של השנה האחרונה בלבד", correct: false },
+                    { text: "סינון ל-Human Studies (מחקרים שנעשו על אדם)", correct: true }
                 ],
-                explanation: "נכון מאוד! ברפואה מבוססת ראיות (EBM), חובה לסנן מחקרים לבני אדם. הסתמכות על תוצאות שהוכחו רק על מודלים של עכברים עלולה להוביל למסקנות קליניות שגויות."
+                explanation: "נכון מאוד! חובה לסנן מחקרים לבני אדם (Human Studies). הסתמכות על תוצאות מעכברים עלולה להוביל לטעויות קליניות.<br><br>שימו לב: סינון ל-Q3-Q4 הוא <strong>טעות קשה</strong> (אלו כתבי העת באיכות הנמוכה ביותר), וסינון של שנה אחת בלבד עלול לפספס מחקרי ענק משמעותיים."
             },
             {
                 id: 3,
-                scenario: "את במהלך משמרת ועולה שאלה לגבי נוהל כף רגל סוכרתית של משרד הבריאות. היכן תבצעי ייעוץ וחיפוש של הנוהל המדויק ללא חשש ממידע מטעה?",
-                availableTools: ["perplexity", "openevidence", "gemini_gems"],
+                scenario: "את במהלך משמרת ועולה שאלה קריטית לגבי נוהל כף רגל סוכרתית של משרד הבריאות. היכן תבצעי ייעוץ וחיפוש של הנוהל המדויק ללא חשש ממידע מטעה?",
+                availableTools: ["consensus", "openevidence", "gemini_gems"],
                 correctTool: "gemini_gems",
-                toolError: "זהירות! מנועי חיפוש פתוחים עלולים להזות נהלים ישראליים או להביא נהלים של מדינות אחרות. למידע מקומי ספציפי, מבין הכלים כאן יש לבחור ב-Gemini Gems שהוזן מראש בחומרים.",
-                actionQuestion: "פתחת את ה-Gemini Gem של המחלקה. מה הופך את הסוכן הזה לאמין עבור שאלתך?",
+                toolError: "זהירות! Consensus יביא מאמרים אקדמיים ולא את הנוהל הישראלי, ו-OpenEvidence מביא קווים מנחים בינלאומיים (Guidelines). למידע מקומי של משרד הבריאות, יש לבחור בסוכן מותאם אישית (Gemini Gems).",
+                actionQuestion: "פתחת את ה-Gemini Gem של המחלקה. מה הופך את הסוכן הזה לאמין ושונה ממנוע חיפוש רגיל עבור שאלתך?",
                 actions: [
                     { text: "הוא מחובר למנוע החיפוש הכללי וסורק את כל אתרי קופות החולים בארץ", correct: false },
                     { text: "הוא הוזן מראש בקבצי ה-PDF של נהלי משרד הבריאות והמחלקה (Knowledge Context / Grounding)", correct: true },
@@ -309,38 +308,38 @@
             },
             {
                 id: 4,
-                scenario: "מטופל שואל אותך האם כדאי לו להתחיל לקחת תוסף תזונה מסוים שקרא עליו. את רוצה לראות במהירות כמה מחקרים בספרות תומכים בטענה שזה עובד, וכמה שוללים אותה.",
+                scenario: "מטופל שואל אותך האם כדאי לו להתחיל לקחת תוסף תזונה מסוים שקרא עליו באינטרנט. את רוצה לראות במהירות כמה מחקרים תומכים בטענה שזה עובד, וכמה שוללים אותה.",
                 availableTools: ["consensus", "notebooklm", "undermind"],
                 correctTool: "consensus",
-                toolError: "כדי לראות במהירות השוואה כמותית של דעות מדעיות (בעד מול נגד) מתוך עשרות מאמרים, הכלי המושלם הוא Consensus.",
+                toolError: "כדי לראות במהירות השוואה כמותית של דעות מדעיות (בעד מול נגד) מתוך עשרות מאמרים, הכלי המושלם מבין השלושה הוא Consensus.",
                 actionQuestion: "באיזה פיצ'ר ספציפי בתוך Consensus תשתמשי כדי לקבל את התשובה הוויזואלית והכמותית לשאלה זו?",
                 actions: [
                     { text: "Citation Graph - שמראה איזה מאמר צוטט הכי הרבה פעמים", correct: false },
                     { text: "Consensus Meter - המציג באחוזים את חלוקת הדעות המדעית (כן / לא / אולי)", correct: true },
                     { text: "Study Type Filter - סינון כדי לראות רק מחקרי סקירה", correct: false }
                 ],
-                explanation: "בדיוק! ה-Consensus Meter הוא כלי נהדר שמנתח את עמדת המדע ומראה לך באחוזים כמה מאמרים תומכים, שוללים או מראים תוצאה מעורבת, נותן תמונת מצב אמינה בשניות."
+                explanation: "בדיוק! ה-Consensus Meter הוא כלי נהדר שמנתח את עמדת המדע ומראה לך באחוזים כמה מאמרים תומכים, שוללים או מראים תוצאה מעורבת. זה נותן תמונת מצב אמינה בשניות למטופל הדואג."
             },
             {
                 id: 5,
                 scenario: "את מתחילה לעבוד על פרויקט הגמר שלך, אבל שאלת המחקר שלך עדיין רחבה מדי. את זקוקה לכלי חכם ש'ישוחח' איתך ויעזור לדייק ולמקד את כיוון החיפוש מול הספרות.",
                 availableTools: ["undermind", "openevidence", "notebooklm"],
                 correctTool: "undermind",
-                toolError: "שגיאה. בעוד שכלים אחרים דורשים שאלה מוכנה, Undermind מצטיין בשיח מקדים כדי לדייק ולמקד את שאלת המחקר שלך לפני החיפוש העמוק.",
+                toolError: "שגיאה. בעוד שכלים אחרים מצריכים שתגיעי עם שאלה מוכנה וברורה, Undermind מצטיין בשיח מקדים כדי לדייק ולמקד את שאלת המחקר שלך לפני החיפוש העמוק.",
                 actionQuestion: "התחלת להקליד נושא כללי ב-Undermind. כיצד המערכת מסייעת לך לדייק את המחקר?",
                 actions: [
                     { text: "היא מפיקה מיד מאמר מסוכם מוכן להגשה על סמך הנושא הכללי", correct: false },
-                    { text: "היא שואלת אותך סדרת שאלות מכוונות (כמו: מה אוכלוסיית היעד? מה ההקשר?) כדי לבנות פרומפט מדויק", correct: true },
+                    { text: "היא שואלת אותך סדרת שאלות מכוונות (כמו: מה אוכלוסיית היעד? מה ההקשר?) כדי לבנות שאילתה מדויקת", correct: true },
                     { text: "היא מבקשת ממך להעלות קבצי PDF שקראת עד כה כדי להבין את הכיוון", correct: false }
                 ],
-                explanation: "נכון מאוד! Undermind לא סתם 'זורק' תוצאות. הוא מתנהג כיועץ מחקר: ברגע שיזהה שהשאלה רחבה מדי, הוא ישאל אותך שאלות מנחות עד שההגדרה תהיה מושלמת לסריקת עומק."
+                explanation: "נכון מאוד! Undermind לא סתם 'זורק' תוצאות לשאילתה רחבה. הוא מתנהג כיועץ מחקר: הוא ישאל אותך שאלות מנחות (כמו מיקוד האוכלוסייה, התערבות) עד שההגדרה תהיה מושלמת לסריקת עומק."
             },
             {
                 id: 6,
                 scenario: "הגדרת במערכת הרפואית שכל פעם שמדד הסוכר של מטופל יורד מתחת ל-70, המערכת תשגר התראה אוטומטית לטלפון של האחות התורנית.",
                 availableTools: ["notebooklm", "openevidence", "consensus"],
-                correctTool: "notebooklm", // טריק, זה לא באמת משנה לשאלה מושגית
-                isConceptQuestion: true, // דגל מיוחד לשאלה מושגית
+                correctTool: "notebooklm", // טריק - השאלה עוברת ישירות לשלב 2
+                isConceptQuestion: true, 
                 conceptCategory: "הגדרת מושג",
                 toolError: "זהו תרחיש שמבחין בין סוגי פעולות מחשב.",
                 actionQuestion: "האם מנגנון ההתראה שהגדרת הוא 'סוכן בינה מלאכותית' (AI Agent) או 'אוטומציה'?",
@@ -354,15 +353,23 @@
         ];
 
         let currentCaseIndex = 0;
-        let score = 0;
-        const POINTS_PER_CASE = 20;
+        let correctAnswers = 0;
 
         // התחלת המשחק
         function startGame() {
             document.getElementById('start-screen').classList.add('hidden-screen');
             document.getElementById('game-screen').classList.remove('hidden-screen');
             document.getElementById('total-cases').innerText = cases.length;
+            updateScoreDisplay();
             loadCase();
+        }
+
+        // עדכון תצוגת הניקוד (באחוזים)
+        function updateScoreDisplay() {
+            // אם אנחנו לפני השאלה הראשונה, נציג 0
+            let percentage = currentCaseIndex === 0 ? 0 : Math.round((correctAnswers / currentCaseIndex) * 100);
+            if(isNaN(percentage)) percentage = 0;
+            document.getElementById('score-display').innerText = percentage;
         }
 
         // יצירת גריד הכלים בהתאם לכלים הזמינים באותו שלב
@@ -391,11 +398,9 @@
         function loadCase() {
             const currentCase = cases[currentCaseIndex];
             
-            // עדכון UI למצב התחלתי של השלב
             document.getElementById('current-case-num').innerText = currentCaseIndex + 1;
             document.getElementById('scenario-text').innerText = currentCase.scenario;
             
-            // איפוס שלבים
             resetToStep1();
             
             // חריג לשאלות מושגיות שאין להן כלי מובהק (מעבר אוטומטי לשלב 2)
@@ -408,7 +413,7 @@
                 document.getElementById('status-text').innerText = "שלב 2: נתחו את המצב ובחרו בהגדרה המקצועית הנכונה.";
                 document.getElementById('action-question').innerText = currentCase.actionQuestion;
                 
-                // הסתרת חלק תצוגת הכלי
+                // הסתרת תצוגת הכלי הנבחר
                 document.getElementById('selected-tool-name').parentElement.parentElement.parentElement.classList.add('hidden-screen');
                 
                 renderActions(currentCase);
@@ -420,7 +425,6 @@
             const currentCase = cases[currentCaseIndex];
             if (currentCase.isConceptQuestion) return;
 
-            // רינדור 3 הכלים הספציפיים למקרה הזה בלבד
             renderToolsGrid(currentCase.availableTools);
 
             document.getElementById('step-1-tools').classList.remove('hidden-screen');
@@ -429,14 +433,12 @@
             document.getElementById('step-1-indicator').className = 'step-indicator step-active';
             document.getElementById('step-2-indicator').className = 'step-indicator step-pending';
             
-            document.getElementById('status-text').innerText = "שלב 1: בחרו את כלי ה-AI המתאים ביותר למשימה זו מהלוח מטה.";
             document.getElementById('status-prompt').className = 'mt-6 p-4 bg-slate-800/50 rounded-xl border border-slate-700 flex items-start gap-3';
             document.getElementById('status-prompt').innerHTML = `
                 <i data-lucide="info" class="w-5 h-5 text-blue-400 shrink-0 mt-0.5"></i>
                 <p id="status-text" class="text-slate-300">שלב 1: בחרו את כלי ה-AI המתאים ביותר למשימה זו מהלוח מטה.</p>
             `;
 
-            // איפוס סגנונות כלים
             document.querySelectorAll('.tool-card').forEach(card => {
                 card.classList.remove('selected', 'error');
             });
@@ -447,11 +449,9 @@
         function selectTool(toolKey, element) {
             const currentCase = cases[currentCaseIndex];
             
-            // איפוס שגיאות קודמות
             document.querySelectorAll('.tool-card').forEach(card => card.classList.remove('error'));
 
             if (toolKey === currentCase.correctTool) {
-                // הצלחה בשלב 1
                 element.classList.add('selected');
                 
                 document.getElementById('step-1-indicator').classList.replace('step-active', 'step-completed');
@@ -463,13 +463,11 @@
                     <p id="status-text" class="text-emerald-200">זיהוי כלי מדויק! כעת עברו לשלב הפעולה.</p>
                 `;
 
-                // הכנת שלב 2
                 setTimeout(() => {
                     document.getElementById('step-1-tools').classList.add('hidden-screen');
                     const step2 = document.getElementById('step-2-actions');
                     step2.classList.remove('hidden-screen');
                     
-                    // ודא שההדר מתאים לשלב 2 גלוי
                     document.getElementById('selected-tool-name').parentElement.parentElement.parentElement.classList.remove('hidden-screen');
 
                     const tool = TOOLS[toolKey];
@@ -484,7 +482,6 @@
                 }, 400);
 
             } else {
-                // שגיאה בשלב 1
                 element.classList.add('error');
                 document.getElementById('status-prompt').className = 'mt-6 p-4 bg-rose-900/30 rounded-xl border border-rose-500/50 flex items-start gap-3 transition-colors';
                 document.getElementById('status-prompt').innerHTML = `
@@ -493,7 +490,6 @@
                 `;
                 lucide.createIcons();
                 
-                // הסרת אפקט הרעידה כדי שיוכל לעבוד שוב בלחיצה הבאה
                 setTimeout(() => element.classList.remove('error'), 500);
             }
         }
@@ -503,7 +499,6 @@
             const container = document.getElementById('actions-container');
             container.innerHTML = '';
 
-            // ערבוב
             const shuffledActions = [...currentCase.actions].sort(() => Math.random() - 0.5);
 
             shuffledActions.forEach(action => {
@@ -511,7 +506,7 @@
                 btn.className = 'w-full text-right p-4 rounded-xl border border-slate-600 bg-slate-800 hover:bg-slate-700 text-slate-200 action-btn flex items-center justify-between group';
                 btn.innerHTML = `
                     <span class="text-lg pr-4">${action.text}</span>
-                    <div class="w-5 h-5 rounded border border-slate-500 group-hover:border-blue-400 shrink-0 ml-2 flex items-center justify-center"></div>
+                    <div class="w-5 h-5 rounded border border-slate-500 group-hover:border-blue-400 shrink-0 ml-2 flex items-center justify-center transition-colors"></div>
                 `;
                 btn.onclick = () => handleFinalAction(action.correct, btn, currentCase);
                 container.appendChild(btn);
@@ -524,8 +519,7 @@
             buttons.forEach(btn => btn.disabled = true);
 
             if (isCorrect) {
-                score += POINTS_PER_CASE;
-                document.getElementById('score-display').innerText = score;
+                correctAnswers++;
                 btnElement.classList.add('bg-emerald-900/40', 'border-emerald-500');
                 btnElement.querySelector('div').innerHTML = '<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>';
                 btnElement.querySelector('div').classList.add('border-emerald-500');
@@ -578,6 +572,7 @@
         function nextCase() {
             document.getElementById('feedback-modal').classList.add('hidden-screen');
             currentCaseIndex++;
+            updateScoreDisplay(); // מעדכן את האחוזים בסרגל העליון
 
             if (currentCaseIndex < cases.length) {
                 loadCase();
@@ -590,7 +585,21 @@
         function endGame() {
             document.getElementById('game-screen').classList.add('hidden-screen');
             document.getElementById('end-screen').classList.remove('hidden-screen');
-            document.getElementById('final-score').innerText = score;
+            
+            const finalPercentage = Math.round((correctAnswers / cases.length) * 100);
+            document.getElementById('final-score').innerText = finalPercentage + "%";
+            
+            let message = "";
+            if (finalPercentage === 100) {
+                message = "עבודה מושלמת! אתם שולטים בכלים ובמתודולוגיה ויודעים בדיוק מתי ואיך להשתמש בכל סוכן AI.";
+            } else if (finalPercentage >= 80) {
+                message = "הישג מרשים מאוד! הבנתם היטב את המגבלות והיתרונות של הכלים, רק שימו לב לדקויות קטנות.";
+            } else if (finalPercentage >= 60) {
+                message = "הצלחתם ברוב התרחישים, אבל יש מקום לחזור על החומר, במיוחד על נושא הסינונים ובידוד ההקשר.";
+            } else {
+                message = "נראה שיש עוד פערים בהבנת ארסנל הכלים. מומלץ לעבור שוב על המצגת כדי להימנע מטעויות קליניות בעתיד.";
+            }
+            document.getElementById('final-message').innerText = message;
         }
 
     </script>
